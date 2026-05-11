@@ -1,0 +1,68 @@
+name: Create Release
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+concurrency:
+  group: release
+  cancel-in-progress: true
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: temurin
+          cache: maven
+
+      - name: Read version from pom.xml
+        id: version
+        run: |
+          project_version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          if [[ -z "${project_version}" || "${project_version}" == *"ERROR"* || "${project_version}" == "null" ]]; then
+            echo "ERROR: Could not determine project version from pom.xml" >&2
+            exit 1
+          fi
+          echo "project_version=${project_version}" >> "$GITHUB_OUTPUT"
+
+      - name: Build with Maven
+        run: mvn package -B
+
+      - name: Verify JAR exists
+        run: |
+          jar="target/Trails-${{ steps.version.outputs.project_version }}.jar"
+          if [[ ! -f "${jar}" ]]; then
+            echo "ERROR: Expected JAR not found: ${jar}" >&2
+            exit 1
+          fi
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          tag="v${{ steps.version.outputs.project_version }}"
+          jar="target/Trails-${{ steps.version.outputs.project_version }}.jar"
+
+          # Force-update the tag to the current commit so that the tag and the
+          # release asset always refer to the same source, even when clobbering
+          # an existing release built from an older commit on the same version.
+          git tag -fa "${tag}" -m "${tag}"
+          git push origin "${tag}" --force
+
+          gh release create "${tag}" \
+            --title "Trails ${tag}" \
+            --generate-notes \
+            --clobber \
+            "${jar}"
