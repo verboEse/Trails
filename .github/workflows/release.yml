@@ -26,7 +26,135 @@ jobs:
           java-version: '21'
           distribution: temurin
           cache: maven
+      - name: Install provided dependencies not in public Maven repos
+        run: |
+          set -euo pipefail
+          python3 <<'PY'
+          import hashlib
+          import shutil
+          import subprocess
+          import xml.etree.ElementTree as ET
+          import zipfile
+          from pathlib import Path
 
+          ns = {"m": "http://maven.apache.org/POM/4.0.0"}
+          root = ET.parse("pom.xml").getroot()
+          CHUNK_SIZE_BYTES = 1024 * 1024
+
+          specs = [
+              {
+                  "groupId": "com.github.TownyAdvanced",
+                  "artifactId": "Towny",
+                  "download_url": "https://github.com/TownyAdvanced/Towny/releases/download/{version}/Towny.Advanced.{version}.zip",
+                  "download_path": Path("towny.zip"),
+                  "sha256": "a2ef1f0eda680c4c5e44192ca552dbf505b7aac41b3a336e91026abbe3f0b599",
+                  "archive_member": "Towny Advanced {version}/Towny-{version}.jar",
+                  "install_path": Path("towny.jar"),
+              },
+              {
+                  "groupId": "de.diddiz",
+                  "artifactId": "logblock",
+                  "download_url": "https://github.com/LogBlock/LogBlock/releases/download/v{version}/LogBlock.jar",
+                  "download_path": Path("logblock.jar"),
+                  "sha256": "5f7c32169a169aff61617da99e58d90fc30d48c554638e7a49a6d3c72609a330",
+              },
+              {
+                  "groupId": "de.whitescan.playerplot",
+                  "artifactId": "PlayerPlot",
+                  "download_url": "https://repo.whitescan.de/releases/de/whitescan/playerplot/PlayerPlot/{version}/PlayerPlot-{version}.jar",
+                  "download_path": Path("playerplot.jar"),
+              },
+              {
+                  "groupId": "io.github.fabiozumbi12.RedProtect",
+                  "artifactId": "RedProtect",
+                  "download_url": "https://github.com/FabioZumbi12/RedProtect/releases/download/v{version}/RedProtect-{version}-b11-release.jar",
+                  "download_path": Path("redprotect.jar"),
+                  "sha256": "ef143cafca8c050154aa8a0d68f821a00d32cf6152f898089583a81534a16bd0",
+              },
+          ]
+
+          retry_args = [
+              "--retry", "3",
+              "--retry-all-errors",
+              "--retry-delay", "2",
+              "--connect-timeout", "20",
+              "--max-time", "300",
+          ]
+
+          def find_dependency(group_id, artifact_id):
+              dependency = root.find(
+                  f".//m:dependency[m:groupId='{group_id}'][m:artifactId='{artifact_id}']",
+                  ns,
+              )
+              if dependency is None:
+                  raise SystemExit(f"Dependency not found in pom.xml: {group_id}:{artifact_id}")
+
+              version = dependency.findtext("m:version", namespaces=ns)
+              scope = dependency.findtext("m:scope", namespaces=ns)
+              if not version:
+                  raise SystemExit(f"Dependency version missing in pom.xml: {group_id}:{artifact_id}")
+              if scope is None:
+                  raise SystemExit(f"Dependency scope missing in pom.xml: {group_id}:{artifact_id}")
+              if scope != "provided":
+                  raise SystemExit(
+                      f"Expected provided scope for {group_id}:{artifact_id}, found {scope!r}"
+                  )
+              return version
+
+          def sha256(path):
+              digest = hashlib.sha256()
+              with path.open("rb") as file:
+                  for chunk in iter(lambda: file.read(CHUNK_SIZE_BYTES), b""):
+                      digest.update(chunk)
+              return digest.hexdigest()
+
+          for spec in specs:
+              version = find_dependency(spec["groupId"], spec["artifactId"])
+              download_path = spec["download_path"]
+              subprocess.run(
+                  [
+                      "curl",
+                      "-fsSL",
+                      *retry_args,
+                      spec["download_url"].format(version=version),
+                      "-o",
+                      str(download_path),
+                  ],
+                  check=True,
+              )
+
+              expected_sha256 = spec.get("sha256")
+              if expected_sha256:
+                  actual_sha256 = sha256(download_path)
+                  if actual_sha256 != expected_sha256:
+                      raise SystemExit(
+                          f"SHA-256 mismatch for {download_path}: "
+                          f"expected {expected_sha256}, got {actual_sha256}"
+                      )
+
+              install_path = download_path
+              archive_member = spec.get("archive_member")
+              if archive_member:
+                  install_path = spec["install_path"]
+                  with zipfile.ZipFile(download_path) as archive:
+                      with archive.open(archive_member.format(version=version)) as source:
+                          with install_path.open("wb") as destination:
+                              shutil.copyfileobj(source, destination)
+
+              subprocess.run(
+                  [
+                      "mvn",
+                      "install:install-file",
+                      f"-Dfile={install_path}",
+                      f"-DgroupId={spec['groupId']}",
+                      f"-DartifactId={spec['artifactId']}",
+                      f"-Dversion={version}",
+                      "-Dpackaging=jar",
+                      "-q",
+                  ],
+                  check=True,
+              )
+          PY
       - name: Read version from pom.xml
         id: version
         run: |
