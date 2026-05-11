@@ -68,11 +68,7 @@ public class LinksConfig {
                     lastLink.setPrevious(link2);
                 }
                 lastLink = link2;
-                if(mat != null)
-                    Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.YELLOW + "[Trails] " + ChatColor.GREEN + "added: Link material = " + mat.name() + " wear = " + wearTimes + " chance = " + chance + " percent");
-                else
-                    Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.YELLOW + "[Trails] " + ChatColor.RED +"ERROR: " + ChatColor.WHITE + currentLink[0] + ChatColor.RED + " is not a valid Material name. Check "
-                            + "https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html for the proper names.");
+                Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.YELLOW + "[Trails] " + ChatColor.GREEN + "added: Link material = " + mat.name() + " wear = " + wearTimes + " chance = " + chance + " percent");
                 --linkLength;
             } while (linkLength != -1);
         }
