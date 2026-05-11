@@ -50,6 +50,13 @@ jobs:
         run: |
           tag="v${{ steps.version.outputs.project_version }}"
           jar="target/Trails-${{ steps.version.outputs.project_version }}.jar"
+
+          # Force-update the tag to the current commit so that the tag and the
+          # release asset always refer to the same source, even when clobbering
+          # an existing release built from an older commit on the same version.
+          git tag -fa "${tag}" -m "${tag}"
+          git push origin "${tag}" --force
+
           gh release create "${tag}" \
             --title "Trails ${tag}" \
             --generate-notes \
