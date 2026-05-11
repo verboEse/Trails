@@ -26,7 +26,31 @@ jobs:
           java-version: '21'
           distribution: temurin
           cache: maven
+      - name: Install provided dependencies not in public Maven repos
+        run: |
+          # Towny 0.103.0.0 — force-install from JitPack to avoid transient failures
+          curl -fsSL "https://jitpack.io/com/github/TownyAdvanced/Towny/0.103.0.0/Towny-0.103.0.0.jar" -o towny.jar
+          mvn install:install-file -Dfile=towny.jar \
+            -DgroupId=com.github.TownyAdvanced -DartifactId=Towny \
+            -Dversion=0.103.0.0 -Dpackaging=jar -q
 
+          # LogBlock 1.12 — GitHub releases (no public Maven repo)
+          curl -fsSL "https://github.com/LogBlock/LogBlock/releases/download/v1.12/LogBlock.jar" -o logblock.jar
+          mvn install:install-file -Dfile=logblock.jar \
+            -DgroupId=de.diddiz -DartifactId=logblock \
+            -Dversion=1.12 -Dpackaging=jar -q
+
+          # PlayerPlot 1.21.0 — from the whitescan Maven repo
+          curl -fsSL "https://repo.whitescan.de/releases/de/whitescan/playerplot/PlayerPlot/1.21.0/PlayerPlot-1.21.0.jar" -o playerplot.jar
+          mvn install:install-file -Dfile=playerplot.jar \
+            -DgroupId=de.whitescan.playerplot -DartifactId=PlayerPlot \
+            -Dversion=1.21.0 -Dpackaging=jar -q
+
+          # RedProtect 8.1.4 — GitHub releases (no public Maven repo)
+          curl -fsSL "https://github.com/FabioZumbi12/RedProtect/releases/download/v8.1.4/RedProtect-8.1.4-b11-release.jar" -o redprotect.jar
+          mvn install:install-file -Dfile=redprotect.jar \
+            -DgroupId=io.github.fabiozumbi12.RedProtect -DartifactId=RedProtect \
+            -Dversion=8.1.4 -Dpackaging=jar -q
       - name: Read version from pom.xml
         id: version
         run: |
