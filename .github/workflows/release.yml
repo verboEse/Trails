@@ -29,7 +29,7 @@ jobs:
       - name: Install provided dependencies not in public Maven repos
         run: |
           set -euo pipefail
-          python <<'PY'
+          python3 <<'PY'
           import hashlib
           import shutil
           import subprocess
@@ -39,6 +39,7 @@ jobs:
 
           ns = {"m": "http://maven.apache.org/POM/4.0.0"}
           root = ET.parse("pom.xml").getroot()
+          CHUNK_SIZE_BYTES = 1024 * 1024
 
           specs = [
               {
@@ -92,6 +93,8 @@ jobs:
               scope = dependency.findtext("m:scope", namespaces=ns)
               if not version:
                   raise SystemExit(f"Dependency version missing in pom.xml: {group_id}:{artifact_id}")
+              if scope is None:
+                  raise SystemExit(f"Dependency scope missing in pom.xml: {group_id}:{artifact_id}")
               if scope != "provided":
                   raise SystemExit(
                       f"Expected provided scope for {group_id}:{artifact_id}, found {scope!r}"
@@ -101,7 +104,7 @@ jobs:
           def sha256(path):
               digest = hashlib.sha256()
               with path.open("rb") as file:
-                  for chunk in iter(lambda: file.read(1024 * 1024), b""):
+                  for chunk in iter(lambda: file.read(CHUNK_SIZE_BYTES), b""):
                       digest.update(chunk)
               return digest.hexdigest()
 
