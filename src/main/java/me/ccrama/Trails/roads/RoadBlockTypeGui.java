@@ -5,6 +5,7 @@ import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
 import com.github.stefvanschie.inventoryframework.pane.PaginatedPane;
 import com.github.stefvanschie.inventoryframework.pane.Pane;
+import com.github.stefvanschie.inventoryframework.pane.util.Slot;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -22,25 +23,25 @@ public class RoadBlockTypeGui extends ChestGui {
         int rows = (int)Math.min(6, Math.ceil(list.size()/7.0) + 2);
         this.setRows(rows);
 
-        OutlinePane background1 = new OutlinePane(0,0,9,rows, Pane.Priority.LOWEST);
+        OutlinePane background1 = new OutlinePane(9,rows, Pane.Priority.LOWEST);
         ItemStack bg1 = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
         ItemMeta meta1 = bg1.getItemMeta();
         meta1.setDisplayName(" ");
         bg1.setItemMeta(meta1);
         background1.addItem(new GuiItem(bg1, inventoryClickEvent -> inventoryClickEvent.setCancelled(true)));
         background1.setRepeat(true);
-        this.addPane(background1);
+        this.addPane(Slot.fromXY(0,0), background1);
 
-        OutlinePane background2 = new OutlinePane(1,1,7,rows-2, Pane.Priority.LOW);
+        OutlinePane background2 = new OutlinePane(7,rows-2, Pane.Priority.LOW);
         ItemStack bg2 = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
         ItemMeta meta2 = bg2.getItemMeta();
         meta2.setDisplayName(" ");
         bg2.setItemMeta(meta2);
         background2.addItem(new GuiItem(bg2, inventoryClickEvent -> inventoryClickEvent.setCancelled(true)));
         background2.setRepeat(true);
-        this.addPane(background2);
+        this.addPane(Slot.fromXY(1,1), background2);
 
-        PaginatedPane pane = new PaginatedPane(1,1,7,rows-2);
+        PaginatedPane pane = new PaginatedPane(7,rows-2);
         List<GuiItem> guiItems = new ArrayList<>();
         for(RoadBlockType roadBlockType : list){
             Material mat = roadBlockType.material;
@@ -63,6 +64,6 @@ public class RoadBlockTypeGui extends ChestGui {
             guiItems.add(guiItem);
         }
         pane.populateWithGuiItems(guiItems);
-        this.addPane(pane);
+        this.addPane(Slot.fromXY(1,1), pane);
     }
 }

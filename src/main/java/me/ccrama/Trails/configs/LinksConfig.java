@@ -31,6 +31,15 @@ public class LinksConfig {
                 String[] currentLink = Arrays.stream(numbs.split(":")).map(String::trim).toArray(String[]::new);
                 Material mat = Material.getMaterial(currentLink[0].toUpperCase());
 
+                if (mat == null) {
+                    Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.YELLOW + "[Trails] " + ChatColor.RED + "WARN: "
+                            + ChatColor.WHITE + currentLink[0] + ChatColor.RED
+                            + " is not a valid Material name. Skipping link entry. Check "
+                            + "https://jd.papermc.io/paper/26.1.2/ for valid names.");
+                    --linkLength;
+                    continue;
+                }
+
                 int wearTimes = 10;
                 int chance = 100;
                 float speedBoost = 1.0F;
@@ -59,11 +68,7 @@ public class LinksConfig {
                     lastLink.setPrevious(link2);
                 }
                 lastLink = link2;
-                if(mat != null)
-                    Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.YELLOW + "[Trails] " + ChatColor.GREEN + "added: Link material = " + mat.name() + " wear = " + wearTimes + " chance = " + chance + " percent");
-                else
-                    Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.YELLOW + "[Trails] " + ChatColor.RED +"ERROR: " + ChatColor.WHITE + currentLink[0] + ChatColor.RED + " is not a valid Material name. Check "
-                            + "https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html for the proper names.");
+                Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.YELLOW + "[Trails] " + ChatColor.GREEN + "added: Link material = " + mat.name() + " wear = " + wearTimes + " chance = " + chance + " percent");
                 --linkLength;
             } while (linkLength != -1);
         }
