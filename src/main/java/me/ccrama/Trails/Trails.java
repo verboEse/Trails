@@ -112,27 +112,27 @@ public class Trails extends JavaPlugin {
         this.trailCommand = new TrailCommand(this);
         RegisterCommands();
         // Towny hook
-        if (pm.getPlugin("Towny") != null && townyHook == null) {
+        if (pm.isPluginEnabled("Towny") && townyHook == null) {
             townyHook = new TownyHook(this);
         }
         // GriefPrevention Hook
-        if (pm.getPlugin("GriefPrevention") != null && gpHook == null) {
+        if (pm.isPluginEnabled("GriefPrevention") && gpHook == null) {
             gpHook = new GriefPreventionHook(this);
         }
         // LogBlock Hook
-        if(pm.getPlugin("LogBlock") != null && config.logBlock && lbHook == null) {
+        if(pm.isPluginEnabled("LogBlock") && config.logBlock && lbHook == null) {
         	lbHook = new LogBlockHook(this);
         }
         // CoreProtect Hook
-        if(pm.getPlugin("CoreProtect") != null && config.coreProtect && cpHook == null) {
+        if(pm.isPluginEnabled("CoreProtect") && config.coreProtect && cpHook == null) {
         	cpHook = new CoreProtectHook(this);
         }
         // RedProtect Hook
-        if(pm.getPlugin("RedProtect") != null && config.redProtect && redProtectHook == null) {
+        if(pm.isPluginEnabled("RedProtect") && config.redProtect && redProtectHook == null) {
             redProtectHook = new RedProtectHook();
         }
         // Dynmap Hook
-        if(pm.getPlugin("Dynmap") != null &&dynmapAPI == null){
+        if(pm.isPluginEnabled("Dynmap") && dynmapAPI == null){
             dynmapAPI = (DynmapAPI) Bukkit.getServer().getPluginManager().getPlugin("Dynmap");
         }
         // PlaceholderAPI Support
@@ -149,7 +149,7 @@ public class Trails extends JavaPlugin {
         }
 
         // Residence Hook
-        if (pm.getPlugin("Residence") != null && residenceHook == null) {
+        if (pm.isPluginEnabled("Residence") && residenceHook == null) {
             residenceHook = new ResidenceHook();
         }
         // Console enabled message
