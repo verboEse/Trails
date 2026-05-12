@@ -3,7 +3,8 @@ plugin-prefix: "&7[&eTrails&7]&r"
 messages:
   ## These are messages sent in game when commands are used. There are some placeholders
   ## You have to use.
-  ## %plugin_prefix% = plugin prefix you set above         %command% = Name of the command you set above
+  ## %plugin_prefix% = plugin prefix you set above
+  ## %command% = Name of the command you set above
   ## %name% = name of person referred to
   alreadyMaxLevel: "%plugin_prefix% &fYour &eTrail &fis already max level!"
   noPerm: "%plugin_prefix% &cYou do not have permission to toggle Trails."
