@@ -167,6 +167,7 @@ jobs:
       - name: Read version from pom.xml
         id: version
         run: |
+          set -euo pipefail
           project_version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
           if [[ -z "${project_version}" || "${project_version}" == *"ERROR"* || "${project_version}" == "null" ]]; then
             echo "ERROR: Could not determine project version from pom.xml" >&2
