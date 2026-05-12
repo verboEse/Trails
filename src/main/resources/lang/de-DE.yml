@@ -1,22 +1,22 @@
-command-name: "trails"
+command-name: trails
 plugin-prefix: "&7[&eTrails&7]&r"
 messages:
   ## Dies sind Nachrichten, die im Spiel angezeigt werden, wenn Befehle verwendet werden. Es gibt einige Platzhalter,
   ## die du verwenden musst.
-  ## %plugin_prefix% = Plugin-Präfix, den du oben festgelegt hast
+  ## %plugin_prefix% = Plugin-Präfix, das du oben festgelegt hast
   ## %command% = Name des Befehls, den du oben festgelegt hast
   ## %name% = Name der referenzierten Person
   alreadyMaxLevel: "%plugin_prefix% &fDein &ePfad &fist bereits auf dem maximalen Level!"
   noPerm: "%plugin_prefix% &cDu hast keine Berechtigung, Pfade umzuschalten."
   noPermBoost: "%plugin_prefix% &cDu hast keine Berechtigung, den Boost umzuschalten."
   noPermOthers: "%plugin_prefix% &cDu hast keine Berechtigung, die Pfade anderer Spieler umzuschalten."
-  consoleSpecify: "%plugin_prefix% &cDu musst einen &fNamen &cangeben, wenn du von der &7Konsole &causfährst."
+  consoleSpecify: "%plugin_prefix% &cDu musst einen &fNamen &cangeben, wenn du von der &7Konsole &causführst."
   toggledOn: "%plugin_prefix% &fDeine &ePfade &fwurden &aaktiviert!"
   toggledOff: "%plugin_prefix% &fDeine &ePfade &fwurden &cdeaktiviert!"
   boostOn: "%plugin_prefix% &fDein &eBoost &fwurde &aaktiviert!"
   boostOff: "%plugin_prefix% &fDein &eBoost &fwurde &cdeaktiviert!"
-  toggledOnOther: "%plugin_prefix% %name%'s &ePfade &fwurden &aaktiviert!"
-  toggledOffOther: "%plugin_prefix% %name%'s &ePfade &fwurden &cdeaktiviert!"
+  toggledOnOther: "%plugin_prefix% %name%s &ePfade &fwurden &aaktiviert!"
+  toggledOffOther: "%plugin_prefix% %name%s &ePfade &fwurden &cdeaktiviert!"
   notPlayedBefore: "%plugin_prefix% %name% hat noch nie auf diesem Server gespielt."
   cantCreateTrails: "%plugin_prefix% Du kannst hier keine Pfade erstellen."
   saveMessage: "%plugin_prefix% Daten wurden erfolgreich gespeichert!"
@@ -28,10 +28,10 @@ messages:
   reloadNoPerm: "%plugin_prefix% &cDu hast keine Berechtigung, dies zu tun!"
   tooManyArgs: "%plugin_prefix% &cZu viele Argumente!"
   wrongArgs: "%plugin_prefix% &cFalsche Befehlsargumente!"
-  alreadyOnBoostOther: "%plugin_prefix% &f%name%'s &eBoost &fist bereits &aaktiviert!"
-  alreadyOffBoostOther: "%plugin_prefix% &f%name%'s &eBoost &fist bereits &cdeaktiviert!"
-  toggledOnBoostOther: "%plugin_prefix% %name%'s &eBoost &fwurde &aaktiviert!"
-  toggledOffBoostOther: "%plugin_prefix% %name%'s &eBoost &fwurde &cdeaktiviert!"
+  alreadyOnBoostOther: "%plugin_prefix% &f%name%s &eBoost &fist bereits &aaktiviert!"
+  alreadyOffBoostOther: "%plugin_prefix% &f%name%s &eBoost &fist bereits &cdeaktiviert!"
+  toggledOnBoostOther: "%plugin_prefix% %name%s &eBoost &fwurde &aaktiviert!"
+  toggledOffBoostOther: "%plugin_prefix% %name%s &eBoost &fwurde &cdeaktiviert!"
   showing-trails: '%plugin_prefix% &ePfade werden angezeigt.'
   showing-trails-radius: '%plugin_prefix% &ePfade werden in einem Radius von &6%radius% Blöcken angezeigt.'
   second-argument-not-double: '%plugin_prefix% &cDas zweite Argument ist ungültig. &7Gib den Radius zur Anzeige der Pfadblöcke an.'
