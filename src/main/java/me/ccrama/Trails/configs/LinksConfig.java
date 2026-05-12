@@ -32,10 +32,11 @@ public class LinksConfig {
                 Material mat = Material.getMaterial(currentLink[0].toUpperCase());
 
                 if (mat == null) {
+                    String apiVersion = this.main.getDescription().getAPIVersion();
                     Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.YELLOW + "[Trails] " + ChatColor.RED + "WARN: "
                             + ChatColor.WHITE + currentLink[0] + ChatColor.RED
                             + " is not a valid Material name. Skipping link entry. Check "
-                            + "https://jd.papermc.io/paper/26.1.2/ for valid names.");
+                            + "https://jd.papermc.io/paper/" + (apiVersion == null ? "latest" : apiVersion) + "/ for valid names.");
                     --linkLength;
                     continue;
                 }
