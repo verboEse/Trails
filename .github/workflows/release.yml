@@ -200,8 +200,11 @@ jobs:
           git tag -fa "${tag}" -m "${tag}"
           git push origin "${tag}" --force
 
+          # Delete an existing release for this tag so we can recreate it
+          # (--clobber is not available in all gh versions).
+          gh release delete "${tag}" --yes 2>/dev/null || true
+
           gh release create "${tag}" \
             --title "Trails ${tag}" \
             --generate-notes \
-            --clobber \
             "${jar}"
