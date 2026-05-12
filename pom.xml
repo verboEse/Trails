@@ -13,6 +13,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <build.number>Unknown</build.number>
+        <minecraft_version>26.1.2</minecraft_version>
     </properties>
 
     <!-- Repositories -->
@@ -167,6 +168,7 @@
 
     <!-- Build information -->
     <build>
+        <finalName>Trails-${minecraft_version}-${project.version}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
