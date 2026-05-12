@@ -168,7 +168,7 @@
 
     <!-- Build information -->
     <build>
-        <finalName>Trails-${minecraft_version}-${project.version}</finalName>
+        <finalName>${project.artifactId}-${minecraft_version}-${project.version}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
