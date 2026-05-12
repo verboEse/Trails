@@ -13,6 +13,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <build.number>Unknown</build.number>
+        <minecraft_version>26.1.2</minecraft_version>
+        <paper_api_version>${minecraft_version}.build.63-stable</paper_api_version>
     </properties>
 
     <!-- Repositories -->
@@ -53,7 +55,7 @@
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>26.1.2.build.63-stable</version>
+            <version>${paper_api_version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -167,6 +169,23 @@
 
     <!-- Build information -->
     <build>
+        <finalName>${project.artifactId}-${minecraft_version}-${project.version}</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <excludes>
+                    <exclude>plugin.yml</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>plugin.yml</include>
+                </includes>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

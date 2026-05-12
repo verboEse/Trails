@@ -167,19 +167,26 @@ jobs:
       - name: Read version from pom.xml
         id: version
         run: |
+          set -euo pipefail
           project_version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
           if [[ -z "${project_version}" || "${project_version}" == *"ERROR"* || "${project_version}" == "null" ]]; then
             echo "ERROR: Could not determine project version from pom.xml" >&2
             exit 1
           fi
+          minecraft_version=$(mvn help:evaluate -Dexpression=minecraft_version -q -DforceStdout)
+          if [[ -z "${minecraft_version}" || "${minecraft_version}" == *"ERROR"* || "${minecraft_version}" == "null" ]]; then
+            echo "ERROR: Could not determine minecraft_version from pom.xml" >&2
+            exit 1
+          fi
           echo "project_version=${project_version}" >> "$GITHUB_OUTPUT"
+          echo "minecraft_version=${minecraft_version}" >> "$GITHUB_OUTPUT"
 
       - name: Build with Maven
         run: mvn package -B
 
       - name: Verify JAR exists
         run: |
-          jar="target/Trails-${{ steps.version.outputs.project_version }}.jar"
+          jar="target/Trails-${{ steps.version.outputs.minecraft_version }}-${{ steps.version.outputs.project_version }}.jar"
           if [[ ! -f "${jar}" ]]; then
             echo "ERROR: Expected JAR not found: ${jar}" >&2
             exit 1
@@ -190,7 +197,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           tag="v${{ steps.version.outputs.project_version }}"
-          jar="target/Trails-${{ steps.version.outputs.project_version }}.jar"
+          jar="target/Trails-${{ steps.version.outputs.minecraft_version }}-${{ steps.version.outputs.project_version }}.jar"
 
           # Force-update the tag to the current commit so that the tag and the
           # release asset always refer to the same source, even when clobbering
@@ -210,6 +217,6 @@ jobs:
           fi
 
           gh release create "${tag}" \
-            --title "Trails ${tag}" \
+            --title "Trails ${{ steps.version.outputs.minecraft_version }}-${tag}" \
             --generate-notes \
             "${jar}"
