@@ -201,8 +201,13 @@ jobs:
           git push origin "${tag}" --force
 
           # Delete an existing release for this tag so we can recreate it
-          # (--clobber is not available in all gh versions).
-          gh release delete "${tag}" --yes 2>/dev/null || true
+          # (--clobber is not available in all gh versions). Ignore only the
+          # case where the release does not exist; let unexpected failures fail.
+          if gh release view "${tag}" >/dev/null 2>&1; then
+            gh release delete "${tag}" --yes
+          else
+            echo "No existing release found for ${tag}; creating a new one."
+          fi
 
           gh release create "${tag}" \
             --title "Trails ${tag}" \
