@@ -195,6 +195,8 @@ jobs:
           # Force-update the tag to the current commit so that the tag and the
           # release asset always refer to the same source, even when clobbering
           # an existing release built from an older commit on the same version.
+          git config user.email "actions@github.com"
+          git config user.name "GitHub Actions"
           git tag -fa "${tag}" -m "${tag}"
           git push origin "${tag}" --force
 
