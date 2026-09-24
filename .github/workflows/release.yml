@@ -47,7 +47,7 @@ jobs:
                   "artifactId": "Towny",
                   "download_url": "https://github.com/TownyAdvanced/Towny/releases/download/{version}/Towny.Advanced.{version}.zip",
                   "download_path": Path("towny.zip"),
-                  "sha256": "a2ef1f0eda680c4c5e44192ca552dbf505b7aac41b3a336e91026abbe3f0b599",
+                  "sha256": "b56d9de7a72e16dff7c30ea4958f649ea2eb80fd080ab51d52eba381da4adcd0",
                   "archive_member": "Towny Advanced {version}/Towny-{version}.jar",
                   "install_path": Path("towny.jar"),
               },
